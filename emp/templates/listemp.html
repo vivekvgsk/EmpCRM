@@ -1,0 +1,26 @@
+{%extends 'index.html'%}
+{%block body_block%}
+<div class="container">
+    <div class="row">
+        {%for emp in employees%}
+
+        <div class="col-4">
+<div class="card" style="width: 18rem;height:400px">
+  <img src="images/vinayak.jpg" class="card-img-top" alt="" style="height:150px; border-radius: 50%;display: block;margin-left: auto;margin-right: auto;width: 50%;">
+  <div class="card-body">
+    <h5 class="card-title">{{emp.first_name}} {{emp.last_name}}</h5>
+
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Employee Id:{{emp.id}}</li>
+    <li class="list-group-item">Department:{{emp.department}}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{%url 'profile' emp.id%}" class="btn btn-danger" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">Profile</a>
+
+  </div></div></div>
+    {%endfor%}
+</div>
+        </div>
+
+{%endblock%}

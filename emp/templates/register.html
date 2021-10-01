@@ -1,0 +1,20 @@
+{%extends 'index.html'%}
+{%block body_block%}
+
+<div class="card" style="width:450px">
+    <h5 class="card-header" style="background-color:#229af0;color:white;font-weight:bold;"><center>Online Registration</center></h5>
+  <div class="card-body">
+    <form action="" method="post" enctype="multipart/form-data">
+    {%csrf_token%}
+        <table>
+            {{form.as_table}}
+        </table>
+
+    <input type="submit" value="submit" class="btn btn-success" style="margin-left:130px;width:100px">
+
+</form>
+</div>
+</div>
+
+{%endblock%}
+
