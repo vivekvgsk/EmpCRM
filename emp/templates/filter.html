@@ -2,7 +2,7 @@
 {%block body_block%}
 <div class="container">
     <div class="row">
-
+{%if employees%}
         {%for emp in employees%}
 
         <div class="col-4">
@@ -20,7 +20,9 @@
     <a href="{%url 'profile' emp.id%}" class="btn btn-danger" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">Profile</a>
 
   </div></div></div>
+
     {%endfor%}
+         {%else%}<h3>Sorry No Matching Found</h3>{%endif%}
 </div>
         </div>
 

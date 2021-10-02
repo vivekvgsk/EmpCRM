@@ -1,7 +1,7 @@
 {%extends 'index.html'%}
 {%block body_block%}
 
-<table class="table table-hover table-bordered" style="width:600px">
+<table class="table table-hover table-bordered " style="width:600px;margin-left:auto;margin-right:auto">
   <thead>
     <tr>
 
@@ -9,7 +9,7 @@
       <th scope="col">{{emp.id}}</th>
         <th scope="col">Department:</th>
       <th scope="col">{{emp.department}}</th>
-        <td rowspan="2"><img src="{{emp.image.url}}" style="width:200px"> </td>
+        <td rowspan="2">{%if emp.image%}<img src="{{emp.image.url}}" style="width:200px">{%else%}<img src="/static/img/def.jpg" style="width:200px;height:100px">{%endif%}</td>
 
 
     </tr>
@@ -43,6 +43,8 @@
 
       <td>Address:</td>
       <td>{{emp.address}}</td>
+      <td>Date Of Birth:</td>
+      <td>{{emp.dob}}</td>
 
 
     </tr>
