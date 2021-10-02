@@ -6,7 +6,7 @@
         {%for emp in employees%}
 
         <div class="col-4">
-<div class="card" style="width: 18rem;height:400px">
+            <a href="{%url 'profile' emp.id%}" style="text-decoration:none"><div class="card" style="width: 18rem;height:400px">
   {%if emp.image%}<img src="{{emp.image.url}}" class="card-img-top" alt="" style="height:150px; border-radius: 50%;display: block;margin-left: auto;margin-right: auto;width: 50%;margin-top:10px">
   {%else%}<img src="/static/img/def.jpg" style="height:150px; border-radius: 50%;display: block;margin-left: auto;margin-right: auto;width: 50%;margin-top:10px">{%endif%}<div class="card-body">
    <center><h5 class="card-title" style="color:blue;font-weight:bold">{{emp.first_name}} {{emp.last_name}}</h5></center>
@@ -19,7 +19,7 @@
   <div class="card-body">
     <a href="{%url 'profile' emp.id%}" class="btn btn-danger" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">Profile</a>
 
-  </div></div></div>
+  </div></a></div></div>
     {%endfor%}
 </div>
         </div>

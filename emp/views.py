@@ -7,10 +7,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from django.core.mail import send_mail
 # Create your views here.
-
+@method_decorator(login_required,name="dispatch")
 class Home(TemplateView):
     template_name="index2.html"
     context={}
@@ -62,38 +64,48 @@ class SignInView(TemplateView):
 
         return render(request, self.template_name, self.context)
 
-class LogOutView(TemplateView):
-    def get(self,request,*args,**kwargs):
-        logout(request)
-        return redirect("login")
+# class LogOutView(TemplateView):
+#     def get(self,request,*args,**kwargs):
+#         logout(request)
+#         return redirect("login")
 
+def sign_out(request,*args,**kwargs):
+    logout(request)
+    return redirect("login")
+
+@method_decorator(login_required,name="dispatch")
 class EmpCreationView(CreateView):
     model=MyEmp
     form_class = EmployeeRegistrationForm
     template_name = "register.html"
     success_url = reverse_lazy("list")
 
+@method_decorator(login_required, name="dispatch")
 class EmpListView(TemplateView):
     model=MyEmp
     template_name="listemp.html"
     context={}
+
 
     def get(self,request,*args,**kwargs):
         employees=self.model.objects.all()
         self.context["employees"]=employees
         return render(request, self.template_name, self.context)
 
+@method_decorator(login_required, name="dispatch")
 class EmpProfileView(DetailView):
     model=MyEmp
     template_name="empdetails.html"
     context_object_name ="emp"
 
+@method_decorator(login_required, name="dispatch")
 class EmpEditView(UpdateView):
     model=MyEmp
     form_class = EmployeeRegistrationForm
     template_name = "empedit.html"
     success_url = reverse_lazy("list")
 
+@method_decorator(login_required, name="dispatch")
 class EmployeeFilterView(TemplateView):
     def post(self,request,*args,**kwargs):
         search=request.POST.get('search',None)
@@ -102,3 +114,4 @@ class EmployeeFilterView(TemplateView):
 
             return render(request, "filter.html",{'employees':employees})
         return render(request, "filter.html")
+
