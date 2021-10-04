@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignInView,EmpCreationView,EmpListView,EmpProfileView,EmpEditView,Home,sign_out,EmployeeFilterView,bday_alert
+from .views import SignInView,EmpCreationView,EmpListView,EmpProfileView,EmpEditView,Home,sign_out,EmployeeFilterView,bday_alert,EmpDeleteView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
@@ -15,6 +15,7 @@ urlpatterns = [
     path("profileedit/<int:pk>",login_required( EmpEditView.as_view(),login_url='login'),name="profileedit"),
     path("home",login_required(Home.as_view(),login_url='login') , name="home"),
     path("search",login_required( EmployeeFilterView.as_view() ,login_url='login'), name="search"),
-    path("notification",bday_alert ,name="bday")
+    path("notification",bday_alert ,name="bday"),
+    path("remove/<int:pk>",EmpDeleteView.as_view(),name="remove")
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

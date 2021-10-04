@@ -18,6 +18,8 @@ class EmployeeRegistrationForm(UserCreationForm):
         "password2": forms.PasswordInput(attrs={"class": "form-control form-label"}),
        }
 
+
+
     def __init__(self, *args, **kwargs):
         super(EmployeeRegistrationForm, self).__init__(*args, **kwargs)
 

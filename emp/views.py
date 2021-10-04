@@ -125,6 +125,12 @@ class EmpEditView(UpdateView):
     template_name = "empedit.html"
     success_url = reverse_lazy("list")
 
+class EmpDeleteView(DeleteView):
+    model=MyEmp
+    template_name = "empdelete.html"
+    success_url = reverse_lazy("list")
+
+
 @method_decorator(login_required, name="dispatch")
 class EmployeeFilterView(TemplateView):
     def post(self,request,*args,**kwargs):
@@ -179,5 +185,5 @@ def bday_alert(request,*args,**kwargs):
         print("hi")
         print(emps)
         context={"emps":emps,
-                 "cnt":cnt}
+                     "cnt":cnt}
         return render(request, "index2.html",context)

@@ -1,7 +1,8 @@
 {%extends 'index.html'%}
 {%block body_block%}
 <a href="{%url 'list'%}" class="btn btn-info" style="height:35px">&laquo; </a>
-<table class="table table-hover table-bordered " style="width:600px;margin-left:auto;margin-right:auto">
+<div class="table-responsive-sm table-responsive-md col-lg-12">
+<table class="table table-hover table-bordered" style="width:600px;margin-left:auto;margin-right:auto">
   <thead>
     <tr>
 
@@ -37,7 +38,7 @@
       <td>Mobile:</td>
       <td>{{emp.phone}}</td>
      {%if user.is_superuser%} <td rowspan="2"> <a href="{%url 'profileedit' emp.id%}"><button type="button" class="btn btn-warning">Update</button></a>
-       <button type="button" class="btn btn-danger">Delete</button></td>{%endif%}
+        <a href="{%url 'remove' emp.id%}"><button type="button" class="btn btn-danger">Delete</button></a></td>{%endif%}
     </tr>
    <tr>
 
