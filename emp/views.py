@@ -18,6 +18,9 @@ from celery.task import periodic_task
 
 from django.core.mail import send_mail
 # Create your views here.
+class GetObjectMixin:
+    def get_object(self,id):
+        return self.model.objects.get(id=id)
 
 def get_bday_count():
     datetime_now = timezone.now()
@@ -25,10 +28,22 @@ def get_bday_count():
     cnt = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month).count()
     return cnt
 
+def bday_alert():
+
+    datetime_now = timezone.now()
+    now_day, now_month = datetime_now.day, datetime_now.month
+    # print(now_day)
+    # print(now_month)
+    emps = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month)
+    # cnt = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month).count()
+    # print("hi")
+    # print(emps)
+    return emps
+
 
 @method_decorator(login_required,name="dispatch")
 class Home(TemplateView):
-    template_name="index2.html"
+    template_name="home.html"
     context={}
 
     def get(self, request, *args, **kwargs):
@@ -38,13 +53,15 @@ class Home(TemplateView):
         memp = MyEmp.objects.filter(gender="Male").count()
         oemp = MyEmp.objects.filter(gender="Others").count()
         cnt=get_bday_count()
+        emps = bday_alert()
         self.context = {
             "totemp": totemp,
             "femp": femp,
             "memp":memp,
             "oemp":oemp,
             "employees":employees,
-            "cnt":cnt
+            "cnt":cnt,
+            "emps":emps
         }
         return render(request, self.template_name, self.context)
 
@@ -71,7 +88,7 @@ class SignInView(TemplateView):
 
                 login(request,user)
                 print("loginsucess")
-                return redirect("bday")
+                return redirect("home")
 
 
             else:
@@ -89,41 +106,92 @@ def sign_out(request,*args,**kwargs):
     logout(request)
     return redirect("login")
 
+# @method_decorator(login_required,name="dispatch")
+# class EmpCreationView(CreateView):
+#     model=MyEmp
+#     form_class = EmployeeRegistrationForm
+#     template_name = "register.html"
+#     success_url = reverse_lazy("list")
+#     cnt = get_bday_count()
+#     context={"cnt":cnt}
+
 @method_decorator(login_required,name="dispatch")
-class EmpCreationView(CreateView):
+class EmpCreationView(TemplateView):
     model=MyEmp
-    form_class = EmployeeRegistrationForm
-    template_name = "register.html"
-    success_url = reverse_lazy("list")
-    cnt = get_bday_count()
-    context={"cnt":cnt}
+    form_class=EmployeeRegistrationForm
+    template_name="register.html"
+    context={}
+    def get(self,request,*args,**kwargs):
+        form=self.form_class()
+        cnt = get_bday_count()
+        emps = bday_alert()
+        self.context={"form":form,"cnt":cnt,"emps":emps}
+        return render(request,self.template_name,self.context)
+    def post(self,request,*args,**kwargs):
+        form=self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            print("saved")
+            return render(request,self.template_name,self.context)
 
 @method_decorator(login_required, name="dispatch")
 class EmpListView(TemplateView):
     model=MyEmp
     template_name="listemp.html"
     context={}
-
-
     def get(self,request,*args,**kwargs):
         employees=self.model.objects.all()
         cnt = get_bday_count()
-        self.context={"employees":employees,"cnt":cnt}
+        emps = bday_alert()
+        self.context={"employees":employees,"cnt":cnt,"emps":emps}
         # self.context["employees"]=employees
         return render(request, self.template_name, self.context)
 
-@method_decorator(login_required, name="dispatch")
-class EmpProfileView(DetailView):
-    model=MyEmp
-    template_name="empdetails.html"
-    context_object_name ="emp"
 
 @method_decorator(login_required, name="dispatch")
-class EmpEditView(UpdateView):
+class EmpProfileView(TemplateView,GetObjectMixin):
     model=MyEmp
-    form_class = EmployeeRegistrationForm
-    template_name = "empedit.html"
-    success_url = reverse_lazy("list")
+    template_name="empdetails.html"
+    context={}
+    def get(self, request, *args, **kwargs):
+
+        # emp=self.model.objects.get(id=id)
+        emp = self.get_object(kwargs.get("id"))
+        cnt = get_bday_count()
+        emps = bday_alert()
+        self.context={"emp":emp,"cnt":cnt,"emps":emps}
+        return render(request, self.template_name, self.context)
+
+
+# @method_decorator(login_required, name="dispatch")
+# class EmpEditView(UpdateView):
+#     model=MyEmp
+#     form_class = EmployeeRegistrationForm
+#     template_name = "empedit.html"
+#     success_url = reverse_lazy("list")
+
+@method_decorator(login_required, name="dispatch")
+class EmpEditView(TemplateView,GetObjectMixin):
+    model=MyEmp
+    form_class=EmployeeRegistrationForm
+    template_name="empedit.html"
+    context={}
+
+    def get(self,request,*args,**kwargs):
+        emp=self.get_object(kwargs.get("id"))
+        form=self.form_class(instance=emp)
+        cnt = get_bday_count()
+        emps = bday_alert()
+        self.context = {"form":form, "cnt": cnt, "emps": emps}
+
+        return render(request,self.template_name,self.context)
+    def post(self,request,*args,**kwargs):
+        emp=self.get_object(kwargs.get("id"))
+        form=self.form_class(instance=emp,data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("list")
+
 
 class EmpDeleteView(DeleteView):
     model=MyEmp
@@ -174,16 +242,16 @@ class EmployeeFilterView(TemplateView):
 #     return render(request,"index2.html",context)
 
 
-def bday_alert(request,*args,**kwargs):
-    if request.method=="GET":
-        datetime_now = timezone.now()
-        now_day, now_month = datetime_now.day, datetime_now.month
-        print(now_day)
-        print(now_month)
-        emps = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month)
-        cnt = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month).count()
-        print("hi")
-        print(emps)
-        context={"emps":emps,
-                     "cnt":cnt}
-        return render(request, "index2.html",context)
+# def bday_alert(request,*args,**kwargs):
+#     if request.method=="GET":
+#         datetime_now = timezone.now()
+#         now_day, now_month = datetime_now.day, datetime_now.month
+#         # print(now_day)
+#         # print(now_month)
+#         emps = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month)
+#         cnt = MyEmp.objects.filter(dob__day=now_day, dob__month=now_month).count()
+#         # print("hi")
+#         # print(emps)
+#         context={"emps":emps,
+#                      "cnt":cnt}
+#         return render(request, "home.html",context)
