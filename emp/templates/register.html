@@ -2,9 +2,10 @@
 {%block body_block%}
 {%load crispy_forms_tags %}
 
-<div class="card" style="width:450px;margin-left:330px">
+<div class="card" style="width:500px;margin-left:330px">
     <h5 class="card-header" style="background-color:#229af0;color:white;font-weight:bold;"><center>REGISTER</center></h5>
-  <div class="card-body">
+  <div class="card-body table-responsive-sm table-responsive-md ">
+      <!--<div class="table-responsive-sm table-responsive-md col-lg-12">-->
     <form action="" method="post" enctype="multipart/form-data">
     {%csrf_token%}
         <table>

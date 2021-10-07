@@ -128,11 +128,12 @@ class EmpCreationView(TemplateView):
         self.context={"form":form,"cnt":cnt,"emps":emps}
         return render(request,self.template_name,self.context)
     def post(self,request,*args,**kwargs):
-        form=self.form_class(request.POST)
+        form=self.form_class(request.POST,files=request.FILES)
         if form.is_valid():
             form.save()
             print("saved")
-            return render(request,self.template_name,self.context)
+            return redirect("list")
+        return render(request, self.template_name,{"form":form})
 
 @method_decorator(login_required, name="dispatch")
 class EmpListView(TemplateView):
@@ -187,10 +188,11 @@ class EmpEditView(TemplateView,GetObjectMixin):
         return render(request,self.template_name,self.context)
     def post(self,request,*args,**kwargs):
         emp=self.get_object(kwargs.get("id"))
-        form=self.form_class(instance=emp,data=request.POST)
+        form=self.form_class(instance=emp,data=request.POST,files=request.FILES)
         if form.is_valid():
             form.save()
             return redirect("list")
+        return render(request, self.template_name,{"form":form})
 
 
 class EmpDeleteView(DeleteView):
@@ -203,12 +205,12 @@ class EmpDeleteView(DeleteView):
 class EmployeeFilterView(TemplateView):
     def post(self,request,*args,**kwargs):
         cnt = get_bday_count()
-
+        emps=bday_alert()
         search=request.POST.get('search',None)
         if search:
-            employees=MyEmp.objects.filter((Q(first_name=search) | Q(department=search) | Q(id=search)))
+            employees=MyEmp.objects.filter((Q(first_name=search) | Q(department=search) ))
 
-            return render(request, "filter.html",{'employees':employees,'cnt':cnt})
+            return render(request, "filter.html",{'employees':employees,'cnt':cnt,'emps':emps})
         return render(request, "filter.html")
 
 # class BdayNotification(TemplateView):

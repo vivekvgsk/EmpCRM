@@ -2,9 +2,9 @@
 {%block body_block%}
 <a href="{%url 'list'%}" class="btn btn-info" style="height:35px">&laquo; </a>
 <div class="table-responsive-sm table-responsive-md col-lg-12">
-<table class="table table-hover table-bordered" style="width:600px;margin-left:auto;margin-right:auto">
+<table class="table table-hover table-bordered" style="width:600px;margin-left:auto;margin-right:auto;background-color:#D9EEE1">
   <thead>
-    <tr>
+    <tr style="color:black">
 
       <th scope="col">ID No:</th>
       <th scope="col">{{emp.id}}</th>
@@ -15,8 +15,8 @@
 
     </tr>
   </thead>
-  <tbody>
-    <tr>
+  <tbody style="color:black">
+    <tr >
 
       <td>First Name:</td>
       <td>{{emp.first_name}}</td>

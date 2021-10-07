@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {%load static%}
+{%load crispy_forms_tags %}
 <html lang="en">
 
 <head>
@@ -20,6 +21,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <!--<link href="{%static 'css/style.css' %}" rel="stylesheet">-->
 
 </head>
 
@@ -56,27 +58,22 @@
     <form action="" method="post">
     {%csrf_token%}
         <table>
-            {{form.as_table}}
+            {{ form|crispy }}
         </table>
         <br>
                                         <input type="submit" value="Login" class="btn btn-primary btn-user btn-block">
 
 
                                         <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
+                                        <a href="index.html" class="btn btn-google btn-user btn-block" style=" pointer-events: none;">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
                                         </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                        <a href="index.html" class="btn btn-facebook btn-user btn-block" style=" pointer-events: none;">
                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
                                     </form>
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

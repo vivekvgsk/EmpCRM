@@ -3,6 +3,8 @@ from .models import MyEmp
 from django.contrib.auth.forms import UserCreationForm
 
 class EmployeeRegistrationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=50)
+    email=forms.CharField(max_length=50)
     class Meta:
         model=MyEmp
         fields=["first_name","last_name","email","phone","gender","department","image","dob","doj","address","username","password1","password2"]
@@ -27,5 +29,5 @@ class EmployeeRegistrationForm(UserCreationForm):
             self.fields[fieldname].help_text = None
 
 class LoginForm(forms.Form):
-    username=forms.CharField(widget=forms.TextInput(attrs={"class": "form-control form-label","placeholder":"Enter Username"}))
-    password=forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control form-label","placeholder":"Enter Password"}))
+    username=forms.CharField(label="",widget=forms.TextInput(attrs={"class": "form-control form-label","placeholder":"Enter Username","label":"user"}))
+    password=forms.CharField(label="",widget=forms.PasswordInput(attrs={"class": "form-control form-label","placeholder":"Enter Password"}))
