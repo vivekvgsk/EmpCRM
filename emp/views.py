@@ -2,7 +2,7 @@
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView,CreateView,ListView,UpdateView,DeleteView,DetailView
 from .models import MyEmp
-from .forms import EmployeeRegistrationForm,LoginForm
+from .forms import EmployeeRegistrationForm,LoginForm,EmpProfileEditForm
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -16,7 +16,6 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 
 
-from django.core.mail import send_mail
 # Create your views here.
 class GetObjectMixin:
     def get_object(self,id):
@@ -174,7 +173,7 @@ class EmpProfileView(TemplateView,GetObjectMixin):
 @method_decorator(login_required, name="dispatch")
 class EmpEditView(TemplateView,GetObjectMixin):
     model=MyEmp
-    form_class=EmployeeRegistrationForm
+    form_class=EmpProfileEditForm
     template_name="empedit.html"
     context={}
 
@@ -208,7 +207,7 @@ class EmployeeFilterView(TemplateView):
         emps=bday_alert()
         search=request.POST.get('search',None)
         if search:
-            employees=MyEmp.objects.filter((Q(first_name=search) | Q(department=search) ))
+            employees=MyEmp.objects.filter((Q(first_name=search) | Q(department=search)| Q(gender=search) ))
 
             return render(request, "filter.html",{'employees':employees,'cnt':cnt,'emps':emps})
         return render(request, "filter.html")

@@ -7,7 +7,7 @@
 
         <div class="col-12 col-md-6 col-lg-4">
             <a href="{%url 'profile' emp.id%}" style="text-decoration:none">
-                <div class="card" style="width: 18rem;height:400px;margin-top:10px;background-color:#D9EEE1">
+                <div class="card"  style="width: 18rem;height:400px;margin-top:10px;background-color:#D9EEE1">
   {%if emp.image%}<img src="{{emp.image.url}}" class="card-img-top" alt="" style="height:150px; border-radius: 50%;display: block;margin-left: auto;margin-right: auto;width: 50%;margin-top:10px">
   {%else%}<img src="/static/img/def.jpg" style="height:150px; border-radius: 50%;display: block;margin-left: auto;margin-right: auto;width: 50%;margin-top:10px">{%endif%}<div class="card-body">
    <center><h5 class="card-title" style="color:red;font-weight:bold">{{emp.first_name}} {{emp.last_name}}</h5></center>
